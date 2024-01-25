@@ -12,7 +12,9 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
@@ -59,7 +61,36 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')
+                    ->label('Full Name')
+                    ->formatStateUsing(function ($state, User $user) {
+                        return $user->name . ' ' . $user->second_name;
+                    })->sortable()->searchable(),
+
+                TextColumn::make('email')
+                    ->copyable()
+                    ->copyMessage('Email address copied')
+                    ->sortable()->searchable(),
+
+                TextColumn::make('position_id')
+                    ->label('Position')
+                    ->formatStateUsing(function ($state, User $user) {
+                        return $user->position->name;
+                    }),
+
+                TextColumn::make('user_role_id')
+                    ->label('Role')
+                    ->formatStateUsing(function ($state, User $user) {
+                        return $user->userRole->name;
+                    }),
+
+
+                ImageColumn::make('avatar'),
+
+                TextColumn::make('created_at')
+                    ->label('Register at')
+                    ->date()
+                    ->sortable()->searchable(),
             ])
             ->filters([
                 //
