@@ -10,16 +10,17 @@ use App\Models\UserRole;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class UserResource extends Resource
 {
@@ -36,9 +37,14 @@ class UserResource extends Resource
                         TextInput::make('name')->label('First name'),
                         TextInput::make('second_name')->label('Second name'),
                         TextInput::make('email'),
+                        // TextInput::make('password')
+                        //     ->password()
+                        //     ->autocomplete(false),
                         TextInput::make('password')
                             ->password()
-                            ->autocomplete(false),
+                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
                     ]),
                 Fieldset::make('Position and role')
                     ->schema([
@@ -52,8 +58,9 @@ class UserResource extends Resource
                             ->searchable(),
                     ]),
 
-                FileUpload::make('avatar')
-                    ->avatar()
+                // FileUpload::make('avatar')
+                //     ->avatar(),
+                SpatieMediaLibraryFileUpload::make('avatar'),
             ]);
     }
 
@@ -85,7 +92,8 @@ class UserResource extends Resource
                     }),
 
 
-                ImageColumn::make('avatar'),
+                // ImageColumn::make('avatar'),
+                SpatieMediaLibraryImageColumn::make('avatar')->circular(),
 
                 TextColumn::make('created_at')
                     ->label('Register at')
@@ -102,6 +110,9 @@ class UserResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
