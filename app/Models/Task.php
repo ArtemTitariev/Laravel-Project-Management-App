@@ -12,9 +12,9 @@ class Task extends Model
 
     protected $fillable = [
         'name', 'description',
-        'project_id', 'category_id', 
+        'project_id', 'category_id',
         'employee_id', 'status_id',
-        'start_date', 'finish_date'        
+        'start_date', 'finish_date'
     ];
 
     protected $casts = [
@@ -26,12 +26,22 @@ class Task extends Model
         'finish_date' => 'datetime',
     ];
 
-    public function taskCategory(): BelongsTo
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(TaskCategory::class);
     }
 
-    public function taskStatus(): BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(TaskStatus::class);
     }

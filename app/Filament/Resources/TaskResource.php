@@ -1,0 +1,180 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use Filament\Forms;
+use App\Models\Task;
+use App\Models\User;
+use Filament\Tables;
+use App\Models\Project;
+use Filament\Forms\Form;
+use App\Models\TaskStatus;
+use Filament\Tables\Table;
+use App\Models\TaskCategory;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TaskResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TaskResource\RelationManagers;
+
+class TaskResource extends Resource
+{
+    protected static ?string $model = Task::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Fieldset::make('Name and description')
+                    ->schema([
+                        TextInput::make('name')->required(),
+
+                        Textarea::make('description')
+                            ->rows(10)
+                            ->cols(20)
+                            ->required()
+                            ->minLength(1)
+                            ->maxLength(255),
+                    ])->columns(1),
+
+                Fieldset::make('Details')
+                    ->schema([
+                        Select::make('project_id')
+                            ->label('Project')
+                            ->options(Project::all()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+
+                        Select::make('employee_id')
+                            ->label('Employee')
+                            ->options(User::all()->mapWithKeys(function ($user) {
+                                return [$user->id => $user->name . ' ' . $user->second_name];
+                            }))
+                            ->searchable()
+                            ->required(),
+
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->options(TaskCategory::all()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+
+                        Select::make('status_id')
+                            ->label('Status')
+                            ->options(TaskStatus::all()->pluck('name', 'id'))
+                            ->searchable()
+                            ->required(),
+                    ]),
+
+                Fieldset::make('Dates')
+                    ->schema([
+                        DatePicker::make('start_date')
+                            ->format('d.m.Y')
+                            ->closeOnDateSelection()
+                            ->required(),
+
+                        DatePicker::make('finish_date')
+                            ->format('d.m.Y')
+                            ->closeOnDateSelection()
+                            ->afterOrEqual('start_date')
+                            ->requiredIf('status_id', '1'),
+                    ]),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->label('Name and description')
+                    ->description(fn (Task $record): string => $record->description)
+                    ->sortable()->searchable()
+                    ->limit(40)
+                    ->wrap(),
+
+                // TextColumn::make('description')
+                //     ->sortable()->searchable()
+                //     ->wrap(),
+
+                TextColumn::make('project_id')
+                    ->label('Project')
+                    ->formatStateUsing(function ($state, Task $task) {
+                        return $task->project->name;
+                    })
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return 'info';
+                    }),
+
+
+
+                TextColumn::make('category_id')
+                    ->label('Category')
+                    ->formatStateUsing(function ($state, Task $task) {
+                        return $task->category->name;
+                    })
+                    ->badge(),
+
+                TextColumn::make('employee_id')
+                    ->label('Employee')
+                    ->formatStateUsing(function ($state, Task $task) {
+                        return $task->employee->name . ' ' . $task->employee->second_name;
+                    })
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return 'success';
+                    }),
+                TextColumn::make('status_id')
+                    ->label('Status')
+                    ->formatStateUsing(function ($state, Task $task) {
+                        return $task->status->name;
+                    })
+                    ->badge(),
+
+                TextColumn::make('start_date')
+                    ->label('Start date')
+                    ->date()
+                    ->sortable()->searchable(),
+                TextColumn::make('finish_date')
+                    ->label('End date')
+                    ->date()
+                    ->sortable()->searchable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListTasks::route('/'),
+            'create' => Pages\CreateTask::route('/create'),
+            'edit' => Pages\EditTask::route('/{record}/edit'),
+        ];
+    }
+}

@@ -34,9 +34,14 @@ class UserResource extends Resource
             ->schema([
                 Fieldset::make('Personal info')
                     ->schema([
-                        TextInput::make('name')->label('First name'),
-                        TextInput::make('second_name')->label('Second name'),
-                        TextInput::make('email'),
+                        TextInput::make('name')
+                            ->label('First name')
+                            ->required(),
+                        TextInput::make('second_name')
+                            ->label('Second name')
+                            ->required(),
+                        TextInput::make('email')->required(),
+
                         TextInput::make('password')
                             ->password()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
@@ -48,11 +53,13 @@ class UserResource extends Resource
                         Select::make('position_id')
                             ->label('Position')
                             ->options(Position::all()->pluck('name', 'id'))
-                            ->searchable(),
+                            ->searchable()
+                            ->required(),
                         Select::make('user_role_id')
                             ->label('Role')
                             ->options(UserRole::all()->pluck('name', 'id'))
-                            ->searchable(),
+                            ->searchable()
+                            ->required(),
                     ]),
 
                 SpatieMediaLibraryFileUpload::make('avatar'),
@@ -78,12 +85,17 @@ class UserResource extends Resource
                     ->label('Position')
                     ->formatStateUsing(function ($state, User $user) {
                         return $user->position->name;
-                    }),
+                    })
+                    ->badge(),
 
                 TextColumn::make('user_role_id')
                     ->label('Role')
                     ->formatStateUsing(function ($state, User $user) {
                         return $user->userRole->name;
+                    })
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return 'success';
                     }),
 
                 // TextColumn::make('teams')
@@ -103,9 +115,10 @@ class UserResource extends Resource
                         $teams = $user->teams->unique('id')->pluck('name');
                         return $teams->join(', ');
                     })
-                // ->badge()
-                // ->separator('|')
-                ->limit(40),
+                    // ->badge()
+                    // ->separator('|')
+                    ->limit(40)
+                    ->wrap(),
 
                 SpatieMediaLibraryImageColumn::make('avatar')->circular(),
 
