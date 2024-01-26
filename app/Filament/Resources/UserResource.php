@@ -37,9 +37,6 @@ class UserResource extends Resource
                         TextInput::make('name')->label('First name'),
                         TextInput::make('second_name')->label('Second name'),
                         TextInput::make('email'),
-                        // TextInput::make('password')
-                        //     ->password()
-                        //     ->autocomplete(false),
                         TextInput::make('password')
                             ->password()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
@@ -58,8 +55,6 @@ class UserResource extends Resource
                             ->searchable(),
                     ]),
 
-                // FileUpload::make('avatar')
-                //     ->avatar(),
                 SpatieMediaLibraryFileUpload::make('avatar'),
             ]);
     }
@@ -110,10 +105,8 @@ class UserResource extends Resource
                     })
                 // ->badge()
                 // ->separator('|')
-                ,
+                ->limit(40),
 
-
-                // ImageColumn::make('avatar'),
                 SpatieMediaLibraryImageColumn::make('avatar')->circular(),
 
                 TextColumn::make('created_at')
