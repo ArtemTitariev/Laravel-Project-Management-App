@@ -26,12 +26,18 @@ class Project extends Model
         'finish_date' => 'datetime',
     ];
 
-    public function projectCategory(): BelongsTo
+    //project manager
+    public function pm(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(ProjectCategory::class);
     }
 
-    public function projectStatus(): BelongsTo
+    public function status(): BelongsTo
     {
         return $this->belongsTo(ProjectStatus::class);
     }

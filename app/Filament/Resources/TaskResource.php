@@ -145,7 +145,7 @@ class TaskResource extends Resource
                     ->date()
                     ->sortable()->searchable(),
                 TextColumn::make('finish_date')
-                    ->label('End date')
+                    ->label('Finish date')
                     ->date()
                     ->sortable()->searchable(),
             ])
