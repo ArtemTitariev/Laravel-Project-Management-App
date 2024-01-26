@@ -91,6 +91,27 @@ class UserResource extends Resource
                         return $user->userRole->name;
                     }),
 
+                // TextColumn::make('teams')
+                //     ->label('Teams')
+                //     ->formatStateUsing(function ($state, User $user) {
+                //         $teams = $user->teams->unique('id')->pluck('name');
+                //         return $teams->implode(" ");
+                //     })
+                //     ->badge()
+                //     // ->separator(", ")
+                //     // ->listWithLineBreaks()
+                //     ->limit(50),
+
+                TextColumn::make('teams')
+                    ->label('Teams')
+                    ->formatStateUsing(function ($state, User $user) {
+                        $teams = $user->teams->unique('id')->pluck('name');
+                        return $teams->join(', ');
+                    })
+                // ->badge()
+                // ->separator('|')
+                ,
+
 
                 // ImageColumn::make('avatar'),
                 SpatieMediaLibraryImageColumn::make('avatar')->circular(),
