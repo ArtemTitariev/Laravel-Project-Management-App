@@ -16,6 +16,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -52,7 +53,6 @@ class ProjectResource extends Resource
                             }))
                             ->searchable()
                             ->required(),
-
 
                         Select::make('category_id')
                             ->label('Category')
@@ -133,7 +133,12 @@ class ProjectResource extends Resource
                     ->sortable()->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name'),
+                SelectFilter::make('status_id')
+                    ->label('Status')
+                    ->relationship('status', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

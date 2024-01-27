@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -128,7 +129,13 @@ class UserResource extends Resource
                     ->sortable()->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('position_id')
+                    ->label('Position')
+                    ->relationship('position', 'name'),
+
+                SelectFilter::make('user_role_id')
+                    ->label('Role')
+                    ->relationship('userRole', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

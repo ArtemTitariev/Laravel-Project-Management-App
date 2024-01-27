@@ -12,12 +12,14 @@ use App\Models\TaskStatus;
 use Filament\Tables\Table;
 use App\Models\TaskCategory;
 use Filament\Resources\Resource;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TaskResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -150,7 +152,35 @@ class TaskResource extends Resource
                     ->sortable()->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('project_id')
+                    ->label('Project')
+                    ->relationship('project', 'name'),
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name'),
+
+                SelectFilter::make('employee_id')
+                    ->label('Employee')
+                    ->relationship('employee', 'name'),
+
+
+                // Filter::make('employee_id')
+                //     ->form([
+                //         Select::make('employee_id')
+                //             ->label('Employee')
+                //             ->options(User::all()->mapWithKeys(function ($user) {
+                //                 return [$user->id => $user->name . ' ' . $user->second_name];
+                //             }))
+                //             ->searchable()
+                //     ])
+                //     ->query(function (Builder $query, array $data): Builder {
+                //         return $query->where('employee_id', $data['employee_id'] ?? null);
+                //     }),
+
+
+                SelectFilter::make('status_id')
+                    ->label('Status')
+                    ->relationship('status', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
