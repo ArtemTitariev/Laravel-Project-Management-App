@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProjectResource\RelationManagers;
+use App\Filament\Resources\ProjectResource\RelationManagers\TeamsRelationManager;
 
 class ProjectResource extends Resource
 {
@@ -95,6 +96,14 @@ class ProjectResource extends Resource
                     })
                     ->sortable(),
 
+                TextColumn::make('teams.name')
+                    ->label('Teams')
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->searchable(),
+
                 TextColumn::make('category.name')
                     ->label('Category')
                     ->badge()
@@ -129,6 +138,12 @@ class ProjectResource extends Resource
                 // SelectFilter::make('pm_id')
                 //     ->label('Project manager')
                 //     ->relationship('pm', 'full_name'),
+
+
+                SelectFilter::make('teams')
+                    ->label('Teams')
+                    ->relationship('teams', 'name')
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -143,7 +158,7 @@ class ProjectResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TeamsRelationManager::class,
         ];
     }
 
