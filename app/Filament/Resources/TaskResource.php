@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TaskResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TaskResource\RelationManagers;
+use App\Filament\Resources\TaskResource\RelationManagers\CategoryRelationManager;
+use App\Filament\Resources\TaskResource\RelationManagers\StatusRelationManager;
 
 class TaskResource extends Resource
 {
@@ -173,6 +175,7 @@ class TaskResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -184,7 +187,8 @@ class TaskResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CategoryRelationManager::class,
+            StatusRelationManager::class,
         ];
     }
 
