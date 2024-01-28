@@ -25,7 +25,10 @@ class ProjectStatusResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')
+                    ->string()
+                    ->maxLength(255)
+                    ->required(),
             ]);
     }
 

@@ -20,6 +20,7 @@ class UserRoleRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->string()
                     ->maxLength(255),
             ]);
     }
