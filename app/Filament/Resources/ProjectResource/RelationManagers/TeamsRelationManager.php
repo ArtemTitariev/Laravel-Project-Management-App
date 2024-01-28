@@ -31,6 +31,9 @@ class TeamsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->required()
+                    ->string()
+                    ->maxLength(255)
                     ->sortable(),
             ])
             ->filters([

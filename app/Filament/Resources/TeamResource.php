@@ -35,7 +35,10 @@ class TeamResource extends Resource
                 Grid::make([
                     'default' => 1,
                 ])->schema([
-                    TextInput::make('name')->required(),
+                    TextInput::make('name')
+                        ->string()
+                        ->maxLength(255)
+                        ->required(),
 
                     Select::make('members')
                         ->label('Members')
@@ -56,7 +59,7 @@ class TeamResource extends Resource
                     ->wrap(),
 
                 TextColumn::make('members.full_name')
-                    ->label('All members')
+                    ->label('All Members')
                     ->listWithLineBreaks()
                     ->bulleted()
                     ->limitList(3)
@@ -64,7 +67,7 @@ class TeamResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('members_count')
-                    ->label('Amount of members')
+                    ->label('Number of Members')
                     ->counts('members', 'id')
                     ->badge()
                     ->color('info'),

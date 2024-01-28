@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use Filament\Tables;
 use App\Models\Project;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use App\Models\TaskStatus;
 use Filament\Tables\Table;
@@ -24,8 +25,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TaskResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TaskResource\RelationManagers;
-use App\Filament\Resources\TaskResource\RelationManagers\CategoryRelationManager;
 use App\Filament\Resources\TaskResource\RelationManagers\StatusRelationManager;
+use App\Filament\Resources\TaskResource\RelationManagers\CategoryRelationManager;
 
 class TaskResource extends Resource
 {
@@ -37,9 +38,12 @@ class TaskResource extends Resource
     {
         return $form
             ->schema([
-                Fieldset::make('Name and description')
+                Fieldset::make('Name and Description')
                     ->schema([
-                        TextInput::make('name')->required(),
+                        TextInput::make('name')
+                            ->string()
+                            ->maxLength(255)
+                            ->required(),
 
                         Textarea::make('description')
                             ->rows(10)

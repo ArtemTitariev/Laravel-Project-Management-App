@@ -39,11 +39,20 @@ class UserResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             ->label('First name')
+                            ->string()
+                            ->maxLength(255)
                             ->required(),
+
                         TextInput::make('second_name')
                             ->label('Second name')
+                            ->string()
+                            ->maxLength(255)
                             ->required(),
-                        TextInput::make('email')->required(),
+
+                        TextInput::make('email')
+                            ->unique()
+                            ->email()
+                            ->required(),
 
                         TextInput::make('password')
                             ->password()
@@ -105,7 +114,9 @@ class UserResource extends Resource
                     ->expandableLimitedList()
                     ->searchable(),
 
-                SpatieMediaLibraryImageColumn::make('avatar')->circular(),
+                SpatieMediaLibraryImageColumn::make('avatar')
+                    ->defaultImageUrl('/storage/no-image-available.jpg')
+                    ->circular(),
 
                 TextColumn::make('created_at')
                     ->label('Register at')

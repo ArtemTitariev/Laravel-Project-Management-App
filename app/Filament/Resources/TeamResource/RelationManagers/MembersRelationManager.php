@@ -25,11 +25,18 @@ class MembersRelationManager extends RelationManager
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('First name')
+                            ->string()
+                            ->maxLength(255)
                             ->required(),
                         Forms\Components\TextInput::make('second_name')
                             ->label('Second name')
+                            ->string()
+                            ->maxLength(255)
                             ->required(),
-                        Forms\Components\TextInput::make('email')->required(),
+                        Forms\Components\TextInput::make('email')
+                            ->unique()
+                            ->email()
+                            ->required(),
 
                         Forms\Components\TextInput::make('password')
                             ->password()
@@ -68,6 +75,17 @@ class MembersRelationManager extends RelationManager
                     ->label('Position')
                     ->badge()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('userRole.name')
+                    ->label('Role')
+                    ->badge()
+                    ->color(function (string $state): string {
+                        return 'success';
+                    })
+                    ->sortable(),
+
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('avatar')
+                    ->defaultImageUrl('/storage/no-image-available.jpg')
+                    ->circular(),
             ])
             ->filters([
                 //

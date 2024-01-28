@@ -6,6 +6,7 @@ use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use App\Models\Project;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\ProjectStatus;
@@ -21,9 +22,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ProjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ProjectResource\RelationManagers;
-use App\Filament\Resources\ProjectResource\RelationManagers\CategoryRelationManager;
-use App\Filament\Resources\ProjectResource\RelationManagers\StatusRelationManager;
 use App\Filament\Resources\ProjectResource\RelationManagers\TeamsRelationManager;
+use App\Filament\Resources\ProjectResource\RelationManagers\StatusRelationManager;
+use App\Filament\Resources\ProjectResource\RelationManagers\CategoryRelationManager;
 
 class ProjectResource extends Resource
 {
@@ -37,14 +38,17 @@ class ProjectResource extends Resource
             ->schema([
                 Fieldset::make('Details')
                     ->schema([
-                        TextInput::make('name')->required(),
+                        TextInput::make('name')
+                            ->string()
+                            ->maxLength(255)
+                            ->required(),
 
                         Select::make('pm_id')
                             ->label('Project manager')
                             ->options(User::whereHas('userRole', function ($query) {
                                 $query->where('name', 'Project manager');
                             })->get()->mapWithKeys(function ($user) {
-                                return [$user->id => $user->name . ' ' . $user->second_name];
+                                return [$user->id => $user->full_name];
                             }))
                             ->searchable()
                             ->required(),
@@ -73,11 +77,12 @@ class ProjectResource extends Resource
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
-                            ->requiredIf('status_id', '1'),
-                        // ->requiredIf('status_id', function ($record) {
-                        //     return $record->status->name === 'Finished';
-                        // }),
-                        //->requiredIf('status.name', 'Finished'),
+                            ->requiredIf('status_id', function ($record) {
+                                return $record->status_id === ProjectStatus::where('name', 'Finished')->first()->id;
+                            })
+                            ->validationMessages([
+                                'required_if' => 'The :attribute field is required when project status is Finished.',
+                            ]),
                     ]),
             ]);
     }
