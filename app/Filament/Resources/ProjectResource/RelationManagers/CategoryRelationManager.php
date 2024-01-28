@@ -10,9 +10,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TeamsRelationManager extends RelationManager
+class CategoryRelationManager extends RelationManager
 {
-    protected static string $relationship = 'teams';
+    protected static string $relationship = 'category';
 
     public function form(Form $form): Form
     {
@@ -29,25 +29,22 @@ class TeamsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('name'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make()
-                    ->preloadRecordSelect(),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //    Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 }
