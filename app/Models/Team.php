@@ -11,10 +11,10 @@ class Team extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 
+        'name',
     ];
 
-    public function users(): BelongsToMany
+    public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'team_members');
     }
@@ -22,5 +22,13 @@ class Team extends Model
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, 'team_projects');
+    }
+
+    public static function createWithMembers(array $attributes, array $memberIds): Team
+    {
+        $team = self::create($attributes);
+        $team->members()->attach($memberIds);
+
+        return $team;
     }
 }

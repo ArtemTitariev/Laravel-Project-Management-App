@@ -36,14 +36,6 @@ class ProjectResource extends Resource
                     ->schema([
                         TextInput::make('name')->required(),
 
-                        // Select::make('pm_id')
-                        //     ->label('Project manager')
-                        //     ->options(User::all()->mapWithKeys(function ($user) {
-                        //         return [$user->id => $user->name . ' ' . $user->second_name];
-                        //     }))
-                        //     ->searchable()
-                        //     ->required(),
-
                         Select::make('pm_id')
                             ->label('Project manager')
                             ->options(User::whereHas('userRole', function ($query) {
@@ -95,33 +87,26 @@ class ProjectResource extends Resource
                     ->sortable()->searchable()
                     ->wrap(),
 
-                TextColumn::make('pm_id')
+                TextColumn::make('pm.full_name')
                     ->label('Project Manager')
-                    ->formatStateUsing(function ($state, Project $project) {
-                        return $project->pm->name . ' ' .
-                            $project->pm->second_name;
-                    })
                     ->badge()
                     ->color(function (string $state): string {
                         return 'success';
-                    }),
+                    })
+                    ->sortable(),
 
-                TextColumn::make('category_id')
+                TextColumn::make('category.name')
                     ->label('Category')
-                    ->formatStateUsing(function ($state, Project $project) {
-                        return $project->category->name;
-                    })
-                    ->badge(),
+                    ->badge()
+                    ->sortable(),
 
-                TextColumn::make('status_id')
+                TextColumn::make('status.name')
                     ->label('Status')
-                    ->formatStateUsing(function ($state, Project $project) {
-                        return $project->status->name;
-                    })
                     ->badge()
                     ->color(function (string $state): string {
                         return 'info';
-                    }),
+                    })
+                    ->sortable(),
 
                 TextColumn::make('start_date')
                     ->label('Start date')
@@ -138,7 +123,12 @@ class ProjectResource extends Resource
                     ->relationship('category', 'name'),
                 SelectFilter::make('status_id')
                     ->label('Status')
-                    ->relationship('status', 'name')
+                    ->relationship('status', 'name'),
+
+                // виводить всіх користувачів, а не тільки PM-ів
+                // SelectFilter::make('pm_id')
+                //     ->label('Project manager')
+                //     ->relationship('pm', 'full_name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -103,44 +103,33 @@ class TaskResource extends Resource
                     ->limit(40)
                     ->wrap(),
 
-                // TextColumn::make('description')
-                //     ->sortable()->searchable()
-                //     ->wrap(),
-
-                TextColumn::make('project_id')
+                TextColumn::make('project.name')
                     ->label('Project')
-                    ->formatStateUsing(function ($state, Task $task) {
-                        return $task->project->name;
-                    })
                     ->badge()
                     ->color(function (string $state): string {
                         return 'info';
-                    }),
+                    })
+                    ->sortable(),
 
-
-
-                TextColumn::make('category_id')
+                TextColumn::make('category.name')
                     ->label('Category')
-                    ->formatStateUsing(function ($state, Task $task) {
-                        return $task->category->name;
-                    })
-                    ->badge(),
+                    ->badge()
+                    ->sortable(),
 
-                TextColumn::make('employee_id')
+                TextColumn::make('employee.full_name')
                     ->label('Employee')
-                    ->formatStateUsing(function ($state, Task $task) {
-                        return $task->employee->name . ' ' . $task->employee->second_name;
-                    })
+                    ->listWithLineBreaks()
                     ->badge()
                     ->color(function (string $state): string {
                         return 'success';
-                    }),
-                TextColumn::make('status_id')
-                    ->label('Status')
-                    ->formatStateUsing(function ($state, Task $task) {
-                        return $task->status->name;
                     })
-                    ->badge(),
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('status.name')
+                    ->label('Status')
+                    ->badge()
+                    ->sortable(),
 
                 TextColumn::make('start_date')
                     ->label('Start date')
@@ -161,7 +150,7 @@ class TaskResource extends Resource
 
                 SelectFilter::make('employee_id')
                     ->label('Employee')
-                    ->relationship('employee', 'name'),
+                    ->relationship('employee', 'full_name'),
 
 
                 // Filter::make('employee_id')

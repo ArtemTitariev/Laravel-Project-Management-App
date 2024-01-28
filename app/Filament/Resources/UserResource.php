@@ -82,51 +82,34 @@ class UserResource extends Resource
                     ->copyMessage('Email address copied')
                     ->sortable()->searchable(),
 
-                TextColumn::make('position_id')
+                TextColumn::make('position.name')
                     ->label('Position')
-                    ->formatStateUsing(function ($state, User $user) {
-                        return $user->position->name;
-                    })
-                    ->badge(),
+                    ->badge()
+                    ->sortable(),
 
-                TextColumn::make('user_role_id')
+                TextColumn::make('userRole.name')
                     ->label('Role')
-                    ->formatStateUsing(function ($state, User $user) {
-                        return $user->userRole->name;
-                    })
                     ->badge()
                     ->color(function (string $state): string {
                         return 'success';
-                    }),
-
-                // TextColumn::make('teams')
-                //     ->label('Teams')
-                //     ->formatStateUsing(function ($state, User $user) {
-                //         $teams = $user->teams->unique('id')->pluck('name');
-                //         return $teams->implode(" ");
-                //     })
-                //     ->badge()
-                //     // ->separator(", ")
-                //     // ->listWithLineBreaks()
-                //     ->limit(50),
-
-                TextColumn::make('teams')
-                    ->label('Teams')
-                    ->formatStateUsing(function ($state, User $user) {
-                        $teams = $user->teams->unique('id')->pluck('name');
-                        return $teams->join(', ');
                     })
-                    // ->badge()
-                    // ->separator('|')
-                    ->limit(40)
-                    ->wrap(),
+                    ->sortable(),
+
+                TextColumn::make('teams.name')
+                    ->label('Teams')
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->searchable(),
 
                 SpatieMediaLibraryImageColumn::make('avatar')->circular(),
 
                 TextColumn::make('created_at')
                     ->label('Register at')
                     ->date()
-                    ->sortable()->searchable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('position_id')
