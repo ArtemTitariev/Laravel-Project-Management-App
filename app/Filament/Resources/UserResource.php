@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\UserResource\RelationManagers\PositionRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\UserRoleRelationManager;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
@@ -122,6 +124,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -136,7 +139,8 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PositionRelationManager::class,
+            UserRoleRelationManager::class,
         ];
     }
 
