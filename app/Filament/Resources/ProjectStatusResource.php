@@ -19,7 +19,10 @@ class ProjectStatusResource extends Resource
 {
     protected static ?string $model = ProjectStatus::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationLabel = 'Statuses';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

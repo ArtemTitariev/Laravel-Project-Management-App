@@ -19,7 +19,10 @@ class TaskCategoryResource extends Resource
 {
     protected static ?string $model = TaskCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Task Management';
+    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

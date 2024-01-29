@@ -19,7 +19,10 @@ class ProjectCategoryResource extends Resource
 {
     protected static ?string $model = ProjectCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Project Management';
+    protected static ?string $navigationLabel = 'Categories';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
