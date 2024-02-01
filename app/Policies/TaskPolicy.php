@@ -13,11 +13,13 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        // return true;
         return
             $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            Task::where('employee_id', $user->id)->exists();
+            $user->tasks->isNotEmpty()
+
+            // показати тільки ті задачі, які відносяться до користувача
+        ;
     }
 
     /**

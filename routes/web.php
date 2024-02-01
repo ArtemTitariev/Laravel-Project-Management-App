@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function () {
-    return redirect('/app');
+    return redirect('/admin');
 })->middleware('auth')->name('dashboard');
 
 // Route::get('/dashboard', function () {

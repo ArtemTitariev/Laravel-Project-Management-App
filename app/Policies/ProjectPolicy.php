@@ -13,10 +13,13 @@ class ProjectPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
-        // $user->userRole->isAdmin() ||
-        //     $user->position->isProjectManager();
-        //+ worker
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager() ||
+            $user->projects->isNotEmpty()
+
+
+            // показати тільки ті проєкти, які відносяться до користувача
+        ;
     }
 
     /**

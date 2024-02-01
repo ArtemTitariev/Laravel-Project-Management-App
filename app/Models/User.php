@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable implements FilamentUser, HasMedia
 {
@@ -73,6 +74,18 @@ class User extends Authenticatable implements FilamentUser, HasMedia
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'employee_id');
+    }
+
+    public function projects(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Project::class,
+            Task::class,
+            'employee_id',
+            'id',
+            'id',
+            'project_id'
+        );
     }
 
     public function userRole(): BelongsTo

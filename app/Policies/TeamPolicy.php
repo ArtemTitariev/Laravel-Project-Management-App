@@ -13,9 +13,14 @@ class TeamPolicy
      */
     public function viewAny(User $user): bool
     {
+
         return $user->userRole->isAdmin() ||
-            $user->position->isProjectManager();
-        // + всі команди працівника
+            $user->position->isProjectManager() ||
+            $user->teams->isNotEmpty()
+
+
+            // показати тільки команди, де є користувач
+        ;
     }
 
     /**
