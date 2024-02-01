@@ -29,9 +29,10 @@ class StatusRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
-            //->modelLabel(ProjectStatus::class) // Додаємо клас моделі для таблиці
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->date(),
             ])
             ->filters([
                 //
@@ -40,7 +41,7 @@ class StatusRelationManager extends RelationManager
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

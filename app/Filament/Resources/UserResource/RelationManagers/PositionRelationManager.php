@@ -31,6 +31,8 @@ class PositionRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->date(),
             ])
             ->filters([
                 //
@@ -39,7 +41,7 @@ class PositionRelationManager extends RelationManager
                 //Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
                 //Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

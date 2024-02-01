@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enum\PositionEnum;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
@@ -48,7 +49,7 @@ class ProjectResource extends Resource
                         Select::make('pm_id')
                             ->label('Project manager')
                             ->options(User::whereHas('userRole', function ($query) {
-                                $query->where('name', 'Project manager');
+                                $query->where('name', \App\Models\Position::PROJECT_MANAGER);
                             })->get()->mapWithKeys(function ($user) {
                                 return [$user->id => $user->full_name];
                             }))
