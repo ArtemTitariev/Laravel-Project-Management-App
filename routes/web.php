@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/app');
-})->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

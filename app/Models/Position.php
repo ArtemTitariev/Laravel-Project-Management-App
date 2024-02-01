@@ -16,6 +16,25 @@ class Position extends Model
     const DESIGNER = 'Designer';
     const TESTER = 'Tester';
 
+    public function isProjectManager()
+    {
+        return $this->name === self::PROJECT_MANAGER;
+    }
+
+    public function isDeveloper()
+    {
+        return $this->name === self::DEVELOPER;
+    }
+
+    public function isDesigner()
+    {
+        return $this->name === self::DESIGNER;
+    }
+
+    public function isTester()
+    {
+        return $this->name === self::TESTER;
+    }
 
     protected $fillable = [
         'name',

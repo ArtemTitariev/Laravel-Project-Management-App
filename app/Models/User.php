@@ -70,6 +70,11 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         return $this->belongsTo(Position::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'employee_id');
+    }
+
     public function userRole(): BelongsTo
     {
         return $this->belongsTo(UserRole::class);
