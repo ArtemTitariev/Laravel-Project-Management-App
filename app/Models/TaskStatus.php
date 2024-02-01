@@ -10,6 +10,10 @@ class TaskStatus extends Model
 {
     use HasFactory;
 
+    const FINISHED = 'Finished';
+    const IN_PROGRESS = 'In-Progress';
+    const CANCELED = 'Canceled';
+
     protected $fillable = [
         'name',
     ];

@@ -10,6 +10,10 @@ class TaskCategory extends Model
 {
     use HasFactory;
 
+    const LOW = 'Low';
+    const MEDIUM = 'Medium';
+    const HIGH = 'High';
+
     protected $fillable = [
         'name',
     ];

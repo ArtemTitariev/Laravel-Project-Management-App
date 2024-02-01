@@ -10,6 +10,9 @@ class ProjectStatus extends Model
 {
     use HasFactory;
 
+    const FINISHED = 'Finished';
+    const IN_PROGRESS = 'In-Progress';
+    
     protected $fillable = [
         'name',
     ];
