@@ -13,6 +13,17 @@ class UserRole extends Model
     const ADMIN = 'Admin';
     const WORKER = 'Worker';
 
+    public function isAdmin()
+    {
+        return $this->name === self::ADMIN;
+    }
+
+    public function isWorker()
+    {
+        return $this->name === self::WORKER;
+    }
+
+
     protected $fillable = [
         'name',
     ];
