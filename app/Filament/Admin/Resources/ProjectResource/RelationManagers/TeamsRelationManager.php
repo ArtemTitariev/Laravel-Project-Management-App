@@ -32,6 +32,24 @@ class TeamsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('members.full_name')
+                    ->label('All Members')
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->limitList(3)
+                    ->expandableLimitedList()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('members_count')
+                    ->label('Number of Members')
+                    ->counts('members', 'id')
+                    ->badge()
+                    ->color('info'),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
                 //
