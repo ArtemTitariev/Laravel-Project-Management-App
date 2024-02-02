@@ -15,13 +15,13 @@ class Project extends Model
     protected $fillable = [
         'name',
         'pm_id', 'category_id', 'status_id',
-        'start_date', 'finish_date'        
+        'start_date', 'finish_date'
     ];
 
     protected $casts = [
         'pm_id' => 'integer',
         'category_id' => 'integer',
-        'status_id' => 'integer', 
+        'status_id' => 'integer',
         'start_date' => 'datetime',
         'finish_date' => 'datetime',
     ];
@@ -45,5 +45,10 @@ class Project extends Model
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'team_projects');
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }

@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->userRole->isAdmin();
+        return true; //$user->userRole->isAdmin();
     }
 
     /**
@@ -47,7 +47,8 @@ class TaskPolicy
     {
         //return $user->userRole->isAdmin();
         return $user->userRole->isAdmin() ||
-            ($user->tasks->contains($task->id));
+            $user->position->isProjectManager() ||
+            $user->tasks->contains($task->id);
     }
 
     /**
