@@ -37,7 +37,7 @@ class TaskResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->string()
                             ->maxLength(255)
-                            ->required(),
+                            ->disabled(),
 
                         Forms\Components\Textarea::make('description')
                             ->rows(10)
@@ -55,7 +55,7 @@ class TaskResource extends Resource
                                 auth()->user()->projects->pluck('name', 'id')
                             )
                             ->searchable()
-                            ->required(),
+                            ->disabled(),
 
                         Forms\Components\Select::make('employee_id')
                             ->label('Employee')
@@ -63,13 +63,13 @@ class TaskResource extends Resource
                                 auth()->user()->id => auth()->user()->full_name
                             ])
                             ->default(auth()->user()->id)
-                            ->required(),
+                            ->disabled(),
 
                         Forms\Components\Select::make('category_id')
                             ->label('Category')
                             ->options(TaskCategory::all()->pluck('name', 'id'))
                             ->searchable()
-                            ->required(),
+                            ->disabled(),
 
                         Forms\Components\Select::make('status_id')
                             ->label('Status')
@@ -163,9 +163,7 @@ class TaskResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+                //
             ]);
     }
 
@@ -180,7 +178,6 @@ class TaskResource extends Resource
     {
         return [
             'index' => Pages\ListTasks::route('/'),
-            'create' => Pages\CreateTask::route('/create'),
             'view' => Pages\ViewTask::route('/{record}'),
             'edit' => Pages\EditTask::route('/{record}/edit'),
         ];

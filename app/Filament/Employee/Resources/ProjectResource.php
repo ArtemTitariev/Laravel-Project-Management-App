@@ -2,16 +2,17 @@
 
 namespace App\Filament\Employee\Resources;
 
-use App\Filament\Employee\Resources\ProjectResource\Pages;
-use App\Filament\Employee\Resources\ProjectResource\RelationManagers;
-use App\Models\Project;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Project;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Employee\Resources\ProjectResource\Pages;
+use App\Filament\Employee\Resources\ProjectResource\RelationManagers;
+use App\Filament\Employee\Resources\ProjectResource\RelationManagers\TeamsRelationManager;
 
 class ProjectResource extends Resource
 {
@@ -131,19 +132,16 @@ class ProjectResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            TeamsRelationManager::class,
         ];
     }
 
@@ -151,9 +149,7 @@ class ProjectResource extends Resource
     {
         return [
             'index' => Pages\ListProjects::route('/'),
-            'create' => Pages\CreateProject::route('/create'),
             'view' => Pages\ViewProject::route('/{record}'),
-            'edit' => Pages\EditProject::route('/{record}/edit'),
         ];
     }
 }

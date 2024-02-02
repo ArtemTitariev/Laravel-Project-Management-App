@@ -2,16 +2,17 @@
 
 namespace App\Filament\Employee\Resources;
 
-use App\Filament\Employee\Resources\TeamResource\Pages;
-use App\Filament\Employee\Resources\TeamResource\RelationManagers;
-use App\Models\Team;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Team;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Employee\Resources\TeamResource\Pages;
+use App\Filament\Employee\Resources\TeamResource\RelationManagers;
+use App\Filament\Employee\Resources\TeamResource\RelationManagers\MembersRelationManager;
 
 class TeamResource extends Resource
 {
@@ -89,7 +90,7 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MembersRelationManager::class,
         ];
     }
 
