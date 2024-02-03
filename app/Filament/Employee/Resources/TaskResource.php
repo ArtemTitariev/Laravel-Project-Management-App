@@ -3,30 +3,18 @@
 namespace App\Filament\Employee\Resources;
 
 use Filament\Forms;
-use App\Models\Task;
 use Filament\Tables;
-use App\Models\Project;
 use Filament\Forms\Form;
-use App\Models\TaskStatus;
 use Filament\Tables\Table;
-use App\Models\TaskCategory;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Employee\Resources\TaskResource\Pages;
-use App\Filament\Employee\Resources\TaskResource\RelationManagers;
 
 class TaskResource extends Resource
 {
-    protected static ?string $model = Task::class;
+    protected static ?string $model = \App\Models\Task::class;
 
     protected static ?string $navigationGroup = 'Tasks';
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
-
-    // public static function query(): Builder
-    // {
-    //     return Task::where('user_id', auth()->user()->id);
-    // }
 
     public static function form(Form $form): Form
     {
@@ -67,13 +55,15 @@ class TaskResource extends Resource
 
                         Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(TaskCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\TaskCategory::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->disabled(),
 
                         Forms\Components\Select::make('status_id')
                             ->label('Status')
-                            ->options(TaskStatus::all()->pluck('name', 'id'))
+                            ->options(\App\Models\TaskStatus::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
@@ -90,7 +80,6 @@ class TaskResource extends Resource
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
                             ->required(),
-                        //->requiredIf('status_id', '1'),
                     ]),
             ]);
     }
@@ -99,12 +88,15 @@ class TaskResource extends Resource
     {
         return $table
             ->query(
-                Task::where('employee_id', auth()->user()->id)
+                \App\Models\Task::where('employee_id', auth()->user()->id)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Name and description')
-                    ->description(fn (Task $record): string => $record->description)
+                    ->description(
+                        fn (\App\Models\Task $record): string =>
+                        $record->description
+                    )
                     ->sortable()->searchable()
                     ->limit(40)
                     ->wrap(),

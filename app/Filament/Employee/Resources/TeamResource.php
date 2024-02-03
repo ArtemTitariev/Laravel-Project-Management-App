@@ -3,20 +3,16 @@
 namespace App\Filament\Employee\Resources;
 
 use Filament\Forms;
-use App\Models\Team;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Employee\Resources\TeamResource\Pages;
-use App\Filament\Employee\Resources\TeamResource\RelationManagers;
 use App\Filament\Employee\Resources\TeamResource\RelationManagers\MembersRelationManager;
 
 class TeamResource extends Resource
 {
-    protected static ?string $model = Team::class;
+    protected static ?string $model = \App\Models\Team::class;
 
     protected static ?string $navigationGroup = 'Teams';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -37,8 +33,7 @@ class TeamResource extends Resource
                         ->label('Members')
                         ->multiple()
                         ->relationship('members', 'full_name')
-                        ->preload()
-                    //
+                        ->preload(),
                 ]),
             ]);
     }
@@ -47,7 +42,7 @@ class TeamResource extends Resource
     {
         return $table
             ->query(
-                Team::whereHas('members', function ($query) {
+                \App\Models\Team::whereHas('members', function ($query) {
                     $query->where('user_id', auth()->user()->id);
                 })
             )
@@ -73,8 +68,6 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable(),
-
-
             ])
             ->filters([
                 //

@@ -4,19 +4,15 @@ namespace App\Filament\Employee\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Project;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Employee\Resources\ProjectResource\Pages;
-use App\Filament\Employee\Resources\ProjectResource\RelationManagers;
 use App\Filament\Employee\Resources\ProjectResource\RelationManagers\TeamsRelationManager;
 
 class ProjectResource extends Resource
 {
-    protected static ?string $model = Project::class;
+    protected static ?string $model = \App\Models\Project::class;
 
     protected static ?string $navigationGroup = 'Projects';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
@@ -34,9 +30,15 @@ class ProjectResource extends Resource
 
                         Forms\Components\Select::make('pm_id')
                             ->label('Project manager')
-                            ->options(\App\Models\User::whereHas('userRole', function ($query) {
-                                $query->where('name', \App\Models\Position::PROJECT_MANAGER);
-                            })->get()->mapWithKeys(function ($user) {
+                            ->options(\App\Models\User::whereHas(
+                                'userRole',
+                                function ($query) {
+                                    $query->where(
+                                        'name',
+                                        \App\Models\Position::PROJECT_MANAGER
+                                    );
+                                }
+                            )->get()->mapWithKeys(function ($user) {
                                 return [$user->id => $user->full_name];
                             }))
                             ->searchable()
@@ -44,13 +46,15 @@ class ProjectResource extends Resource
 
                         Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(\App\Models\ProjectCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectCategory::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
                         Forms\Components\Select::make('status_id')
                             ->label('Status')
-                            ->options(\App\Models\ProjectStatus::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectStatus::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
@@ -67,7 +71,9 @@ class ProjectResource extends Resource
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
                             ->requiredIf('status_id', function ($record) {
-                                return $record->status_id === \App\Models\ProjectStatus::where('name', 'Finished')->first()->id;
+                                return $record->status_id ===
+                                    \App\Models\ProjectStatus::where('name', 'Finished')
+                                    ->first()->id;
                             })
                             ->validationMessages([
                                 'required_if' => 'The :attribute field is required when project status is Finished.',
@@ -80,7 +86,7 @@ class ProjectResource extends Resource
     {
         return $table
             ->query(
-                Project::whereHas('tasks', function ($query) {
+                \App\Models\Project::whereHas('tasks', function ($query) {
                     $query->where('employee_id', auth()->user()->id);
                 })
             )

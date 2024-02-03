@@ -34,9 +34,10 @@ class MembersRelationManager extends RelationManager
                             ->maxLength(255)
                             ->required(),
                         Forms\Components\TextInput::make('email')
-                            ->unique()
                             ->email()
-                            ->required(),
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->unique(ignoreRecord: true),
 
                         Forms\Components\TextInput::make('password')
                             ->password()
