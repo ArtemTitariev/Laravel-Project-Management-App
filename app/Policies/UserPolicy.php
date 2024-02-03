@@ -7,6 +7,19 @@ use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+
+    public function viewAdminPanel(User $user): bool
+    {
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
+    }
+
+    public function viewEmployeePanel(User $user): bool
+    {
+        return $user->userRole->isWorker() &&
+            !$user->position->isProjectManager();
+    }
+
     /**
      * Determine whether the user can view any models.
      */
