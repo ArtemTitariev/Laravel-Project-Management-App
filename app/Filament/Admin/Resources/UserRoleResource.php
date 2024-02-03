@@ -2,22 +2,15 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
-use App\Models\UserRole;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Admin\Resources\UserRoleResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\UserRoleResource\RelationManagers;
 
 class UserRoleResource extends Resource
 {
-    protected static ?string $model = UserRole::class;
+    protected static ?string $model = \App\Models\UserRole::class;
 
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationLabel = 'Roles';
@@ -28,7 +21,7 @@ class UserRoleResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                \Filament\Forms\Components\TextInput::make('name')
                     ->string()
                     ->maxLength(255)
                     ->required(),
@@ -39,10 +32,10 @@ class UserRoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable()->searchable(),
             ])
@@ -50,7 +43,6 @@ class UserRoleResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

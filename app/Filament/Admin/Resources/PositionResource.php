@@ -2,22 +2,15 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
-use App\Models\Position;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Admin\Resources\PositionResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\PositionResource\RelationManagers;
 
 class PositionResource extends Resource
 {
-    protected static ?string $model = Position::class;
+    protected static ?string $model = \App\Models\Position::class;
 
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
@@ -27,7 +20,7 @@ class PositionResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                \Filament\Forms\Components\TextInput::make('name')
                     ->required()
                     ->string()
                     ->maxLength(255),
@@ -38,10 +31,10 @@ class PositionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable()->searchable(),
             ])
@@ -49,7 +42,6 @@ class PositionResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

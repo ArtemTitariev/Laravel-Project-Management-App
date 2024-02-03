@@ -6,18 +6,12 @@ use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\ProjectCategory;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ProjectCategoryResource\Pages;
-use App\Filament\Admin\Resources\ProjectCategoryResource\RelationManagers;
 
 class ProjectCategoryResource extends Resource
 {
-    protected static ?string $model = ProjectCategory::class;
+    protected static ?string $model = \App\Models\ProjectCategory::class;
 
     protected static ?string $navigationGroup = 'Project Management';
     protected static ?string $navigationLabel = 'Categories';
@@ -28,7 +22,7 @@ class ProjectCategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                \Filament\Forms\Components\TextInput::make('name')
                     ->string()
                     ->maxLength(255)
                     ->required(),
@@ -39,10 +33,10 @@ class ProjectCategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable()->searchable(),
             ])
@@ -50,7 +44,6 @@ class ProjectCategoryResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

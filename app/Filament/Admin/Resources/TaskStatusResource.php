@@ -5,19 +5,13 @@ namespace App\Filament\Admin\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use Filament\Forms\Form;
-use App\Models\TaskStatus;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\TaskStatusResource\Pages;
-use App\Filament\Admin\Resources\TaskStatusResource\RelationManagers;
 
 class TaskStatusResource extends Resource
 {
-    protected static ?string $model = TaskStatus::class;
+    protected static ?string $model = \App\Models\TaskStatus::class;
 
     protected static ?string $navigationGroup = 'Task Management';
     protected static ?string $navigationLabel = 'Statuses';
@@ -28,7 +22,7 @@ class TaskStatusResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                \Filament\Forms\Components\TextInput::make('name')
                     ->string()
                     ->maxLength(255)
                     ->required(),
@@ -39,10 +33,10 @@ class TaskStatusResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+               \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable()->searchable(),
             ])
@@ -50,7 +44,6 @@ class TaskStatusResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

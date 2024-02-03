@@ -2,29 +2,17 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
-use App\Models\Team;
-use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Admin\Resources\TeamResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\TeamResource\RelationManagers;
 use App\Filament\Admin\Resources\TeamResource\RelationManagers\MembersRelationManager;
 
 class TeamResource extends Resource
 {
 
-    protected static ?string $model = Team::class;
+    protected static ?string $model = \App\Models\Team::class;
 
     protected static ?string $navigationGroup = 'Team Management';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -33,20 +21,19 @@ class TeamResource extends Resource
     {
         return $form
             ->schema([
-                Grid::make([
+                \Filament\Forms\Components\Grid::make([
                     'default' => 1,
                 ])->schema([
-                    TextInput::make('name')
+                    \Filament\Forms\Components\TextInput::make('name')
                         ->string()
                         ->maxLength(255)
                         ->required(),
 
-                    Select::make('members')
+                    \Filament\Forms\Components\Select::make('members')
                         ->label('Members')
                         ->multiple()
                         ->relationship('members', 'full_name')
-                        ->preload()
-                    //
+                        ->preload(),
                 ]),
             ]);
     }
@@ -55,11 +42,11 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
 
-                TextColumn::make('members.full_name')
+                \Filament\Tables\Columns\TextColumn::make('members.full_name')
                     ->label('All Members')
                     ->listWithLineBreaks()
                     ->bulleted()
@@ -67,13 +54,13 @@ class TeamResource extends Resource
                     ->expandableLimitedList()
                     ->searchable(),
 
-                TextColumn::make('members_count')
+                \Filament\Tables\Columns\TextColumn::make('members_count')
                     ->label('Number of Members')
                     ->counts('members', 'id')
                     ->badge()
                     ->color('info'),
 
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable(),
 

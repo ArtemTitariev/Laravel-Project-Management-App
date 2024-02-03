@@ -2,32 +2,18 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
-use App\Models\User;
 use Filament\Tables;
-use App\Models\Position;
-use App\Models\UserRole;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Fieldset;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Admin\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\UserResource\RelationManagers;
 use App\Filament\Admin\Resources\UserResource\RelationManagers\PositionRelationManager;
 use App\Filament\Admin\Resources\UserResource\RelationManagers\UserRoleRelationManager;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class UserResource extends Resource
 {
-    protected static ?string $model = User::class;
+    protected static ?string $model = \App\Models\User::class;
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 1;
@@ -36,47 +22,47 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Fieldset::make('Personal info')
+                \Filament\Forms\Components\Fieldset::make('Personal info')
                     ->schema([
-                        TextInput::make('name')
+                        \Filament\Forms\Components\TextInput::make('name')
                             ->label('First name')
                             ->string()
                             ->maxLength(255)
                             ->required(),
 
-                        TextInput::make('second_name')
+                        \Filament\Forms\Components\TextInput::make('second_name')
                             ->label('Second name')
                             ->string()
                             ->maxLength(255)
                             ->required(),
 
-                        TextInput::make('email')
+                        \Filament\Forms\Components\TextInput::make('email')
                             ->email()
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $context): bool => $context === 'create')
                             ->unique(ignoreRecord: true),
 
-                        TextInput::make('password')
+                        \Filament\Forms\Components\TextInput::make('password')
                             ->password()
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $context): bool => $context === 'create')
                     ]),
-                Fieldset::make('Position and role')
+                \Filament\Forms\Components\Fieldset::make('Position and role')
                     ->schema([
-                        Select::make('position_id')
+                        \Filament\Forms\Components\Select::make('position_id')
                             ->label('Position')
-                            ->options(Position::all()->pluck('name', 'id'))
+                            ->options(\App\Models\Position::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
-                        Select::make('user_role_id')
+                        \Filament\Forms\Components\Select::make('user_role_id')
                             ->label('Role')
-                            ->options(UserRole::all()->pluck('name', 'id'))
+                            ->options(\App\Models\UserRole::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
 
-                SpatieMediaLibraryFileUpload::make('avatar'),
+                \Filament\Forms\Components\SpatieMediaLibraryFileUpload::make('avatar'),
             ]);
     }
 
@@ -84,23 +70,23 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->label('Full Name')
-                    ->formatStateUsing(function ($state, User $user) {
+                    ->formatStateUsing(function ($state, \App\Models\User $user) {
                         return $user->name . ' ' . $user->second_name;
                     })->sortable()->searchable(),
 
-                TextColumn::make('email')
+                \Filament\Tables\Columns\TextColumn::make('email')
                     ->copyable()
                     ->copyMessage('Email address copied')
                     ->sortable()->searchable(),
 
-                TextColumn::make('position.name')
+                \Filament\Tables\Columns\TextColumn::make('position.name')
                     ->label('Position')
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('userRole.name')
+                \Filament\Tables\Columns\TextColumn::make('userRole.name')
                     ->label('Role')
                     ->badge()
                     ->color(function (string $state): string {
@@ -108,7 +94,7 @@ class UserResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('teams.name')
+                \Filament\Tables\Columns\TextColumn::make('teams.name')
                     ->label('Teams')
                     ->listWithLineBreaks()
                     ->bulleted()
@@ -116,22 +102,22 @@ class UserResource extends Resource
                     ->expandableLimitedList()
                     ->searchable(),
 
-                SpatieMediaLibraryImageColumn::make('avatar')
+                \Filament\Tables\Columns\SpatieMediaLibraryImageColumn::make('avatar')
                     ->defaultImageUrl('/storage/no-image-available.jpg')
                     ->circular(),
 
-                TextColumn::make('created_at')
+                \Filament\Tables\Columns\TextColumn::make('created_at')
                     ->label('Register at')
                     ->date()
                     ->sortable()
                     ->searchable(),
             ])
             ->filters([
-                SelectFilter::make('position_id')
+                \Filament\Tables\Filters\SelectFilter::make('position_id')
                     ->label('Position')
                     ->relationship('position', 'name'),
 
-                SelectFilter::make('user_role_id')
+                \Filament\Tables\Filters\SelectFilter::make('user_role_id')
                     ->label('Role')
                     ->relationship('userRole', 'name'),
             ])

@@ -2,35 +2,18 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Forms;
-use App\Models\Task;
-use App\Models\User;
 use Filament\Tables;
-use App\Models\Project;
-use Filament\Forms\Get;
 use Filament\Forms\Form;
 use App\Models\TaskStatus;
 use Filament\Tables\Table;
-use App\Models\TaskCategory;
 use Filament\Resources\Resource;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Admin\Resources\TaskResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\TaskResource\RelationManagers;
 use App\Filament\Admin\Resources\TaskResource\RelationManagers\StatusRelationManager;
 use App\Filament\Admin\Resources\TaskResource\RelationManagers\CategoryRelationManager;
 
 class TaskResource extends Resource
 {
-    protected static ?string $model = Task::class;
+    protected static ?string $model = \App\Models\Task::class;
 
     protected static ?string $navigationGroup = 'Task Management';
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
@@ -40,14 +23,14 @@ class TaskResource extends Resource
     {
         return $form
             ->schema([
-                Fieldset::make('Name and Description')
+                \Filament\Forms\Components\Fieldset::make('Name and Description')
                     ->schema([
-                        TextInput::make('name')
+                        \Filament\Forms\Components\TextInput::make('name')
                             ->string()
                             ->maxLength(255)
                             ->required(),
 
-                        Textarea::make('description')
+                        \Filament\Forms\Components\Textarea::make('description')
                             ->rows(10)
                             ->cols(20)
                             ->required()
@@ -55,43 +38,43 @@ class TaskResource extends Resource
                             ->maxLength(255),
                     ])->columns(1),
 
-                Fieldset::make('Details')
+                \Filament\Forms\Components\Fieldset::make('Details')
                     ->schema([
-                        Select::make('project_id')
+                        \Filament\Forms\Components\Select::make('project_id')
                             ->label('Project')
-                            ->options(Project::all()->pluck('name', 'id'))
+                            ->options(\App\Models\Project::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
-                        Select::make('employee_id')
+                        \Filament\Forms\Components\Select::make('employee_id')
                             ->label('Employee')
-                            ->options(User::all()->mapWithKeys(function ($user) {
+                            ->options(\App\Models\User::all()->mapWithKeys(function ($user) {
                                 return [$user->id => $user->name . ' ' . $user->second_name];
                             }))
                             ->searchable()
                             ->required(),
 
-                        Select::make('category_id')
+                        \Filament\Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(TaskCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\TaskCategory::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
-                        Select::make('status_id')
+                        \Filament\Forms\Components\Select::make('status_id')
                             ->label('Status')
                             ->options(TaskStatus::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
 
-                Fieldset::make('Dates')
+                \Filament\Forms\Components\Fieldset::make('Dates')
                     ->schema([
-                        DatePicker::make('start_date')
+                        \Filament\Forms\Components\DatePicker::make('start_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->required(),
 
-                        DatePicker::make('finish_date')
+                        \Filament\Forms\Components\DatePicker::make('finish_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
@@ -104,14 +87,14 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->label('Name and description')
-                    ->description(fn (Task $record): string => $record->description)
+                    ->description(fn (\App\Models\Task $record): string => $record->description)
                     ->sortable()->searchable()
                     ->limit(40)
                     ->wrap(),
 
-                TextColumn::make('project.name')
+                \Filament\Tables\Columns\TextColumn::make('project.name')
                     ->label('Project')
                     ->badge()
                     ->color(function (string $state): string {
@@ -119,12 +102,12 @@ class TaskResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('category.name')
+                \Filament\Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('employee.full_name')
+                \Filament\Tables\Columns\TextColumn::make('employee.full_name')
                     ->label('Employee')
                     ->listWithLineBreaks()
                     ->badge()
@@ -134,48 +117,33 @@ class TaskResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('status.name')
+                \Filament\Tables\Columns\TextColumn::make('status.name')
                     ->label('Status')
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('start_date')
+                \Filament\Tables\Columns\TextColumn::make('start_date')
                     ->label('Start date')
                     ->date()
                     ->sortable()->searchable(),
-                TextColumn::make('finish_date')
+                \Filament\Tables\Columns\TextColumn::make('finish_date')
                     ->label('Finish date')
                     ->date()
                     ->sortable()->searchable(),
             ])
             ->filters([
-                SelectFilter::make('project_id')
+                \Filament\Tables\Filters\SelectFilter::make('project_id')
                     ->label('Project')
                     ->relationship('project', 'name'),
-                SelectFilter::make('category_id')
+                \Filament\Tables\Filters\SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name'),
 
-                SelectFilter::make('employee_id')
+                \Filament\Tables\Filters\SelectFilter::make('employee_id')
                     ->label('Employee')
                     ->relationship('employee', 'full_name'),
 
-
-                // Filter::make('employee_id')
-                //     ->form([
-                //         Select::make('employee_id')
-                //             ->label('Employee')
-                //             ->options(User::all()->mapWithKeys(function ($user) {
-                //                 return [$user->id => $user->name . ' ' . $user->second_name];
-                //             }))
-                //             ->searchable()
-                //     ])
-                //     ->query(function (Builder $query, array $data): Builder {
-                //         return $query->where('employee_id', $data['employee_id'] ?? null);
-                //     }),
-
-
-                SelectFilter::make('status_id')
+                \Filament\Tables\Filters\SelectFilter::make('status_id')
                     ->label('Status')
                     ->relationship('status', 'name')
             ])
@@ -204,7 +172,7 @@ class TaskResource extends Resource
         return [
             'index' => Pages\ListTasks::route('/'),
             'create' => Pages\CreateTask::route('/create'),
-             'view' => Pages\ViewTask::route('/{record}'),
+            'view' => Pages\ViewTask::route('/{record}'),
             'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
     }

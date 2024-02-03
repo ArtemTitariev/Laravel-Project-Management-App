@@ -2,34 +2,18 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enum\PositionEnum;
-use Filament\Forms;
-use App\Models\User;
 use Filament\Tables;
-use App\Models\Project;
-use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\ProjectStatus;
-use App\Models\ProjectCategory;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Fieldset;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Admin\Resources\ProjectResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\ProjectResource\RelationManagers;
 use App\Filament\Admin\Resources\ProjectResource\RelationManagers\TeamsRelationManager;
 use App\Filament\Admin\Resources\ProjectResource\RelationManagers\StatusRelationManager;
 use App\Filament\Admin\Resources\ProjectResource\RelationManagers\CategoryRelationManager;
 
 class ProjectResource extends Resource
 {
-    protected static ?string $model = Project::class;
+    protected static ?string $model = \App\Models\Project::class;
 
     protected static ?string $navigationGroup = 'Project Management';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
@@ -39,16 +23,16 @@ class ProjectResource extends Resource
     {
         return $form
             ->schema([
-                Fieldset::make('Details')
+                \Filament\Forms\Components\Fieldset::make('Details')
                     ->schema([
-                        TextInput::make('name')
+                        \Filament\Forms\Components\TextInput::make('name')
                             ->string()
                             ->maxLength(255)
                             ->required(),
 
-                        Select::make('pm_id')
+                        \Filament\Forms\Components\Select::make('pm_id')
                             ->label('Project manager')
-                            ->options(User::whereHas('userRole', function ($query) {
+                            ->options(\App\Models\User::whereHas('userRole', function ($query) {
                                 $query->where('name', \App\Models\Position::PROJECT_MANAGER);
                             })->get()->mapWithKeys(function ($user) {
                                 return [$user->id => $user->full_name];
@@ -56,32 +40,34 @@ class ProjectResource extends Resource
                             ->searchable()
                             ->required(),
 
-                        Select::make('category_id')
+                        \Filament\Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(ProjectCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectCategory::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
-                        Select::make('status_id')
+                        \Filament\Forms\Components\Select::make('status_id')
                             ->label('Status')
-                            ->options(ProjectStatus::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectStatus::all()->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
 
-                Fieldset::make('Dates')
+                \Filament\Forms\Components\Fieldset::make('Dates')
                     ->schema([
-                        DatePicker::make('start_date')
+                        \Filament\Forms\Components\DatePicker::make('start_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->required(),
 
-                        DatePicker::make('finish_date')
+                        \Filament\Forms\Components\DatePicker::make('finish_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
                             ->requiredIf('status_id', function ($record) {
-                                return $record->status_id === ProjectStatus::where('name', 'Finished')->first()->id;
+                                return $record->status_id ===
+                                    \App\Models\ProjectStatus::where('name', 'Finished')
+                                    ->first()->id;
                             })
                             ->validationMessages([
                                 'required_if' => 'The :attribute field is required when project status is Finished.',
@@ -94,11 +80,11 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
 
-                TextColumn::make('pm.full_name')
+                \Filament\Tables\Columns\TextColumn::make('pm.full_name')
                     ->label('Project Manager')
                     ->badge()
                     ->color(function (string $state): string {
@@ -106,7 +92,7 @@ class ProjectResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('teams.name')
+                \Filament\Tables\Columns\TextColumn::make('teams.name')
                     ->label('Teams')
                     ->listWithLineBreaks()
                     ->bulleted()
@@ -114,12 +100,12 @@ class ProjectResource extends Resource
                     ->expandableLimitedList()
                     ->searchable(),
 
-                TextColumn::make('category.name')
+                \Filament\Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('status.name')
+                \Filament\Tables\Columns\TextColumn::make('status.name')
                     ->label('Status')
                     ->badge()
                     ->color(function (string $state): string {
@@ -127,33 +113,37 @@ class ProjectResource extends Resource
                     })
                     ->sortable(),
 
-                TextColumn::make('start_date')
+                \Filament\Tables\Columns\TextColumn::make('start_date')
                     ->label('Start date')
                     ->date()
                     ->sortable()->searchable(),
-                TextColumn::make('finish_date')
+                \Filament\Tables\Columns\TextColumn::make('finish_date')
                     ->label('Finish date')
                     ->date()
                     ->sortable()->searchable(),
             ])
             ->filters([
-                SelectFilter::make('category_id')
+                \Filament\Tables\Filters\SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name'),
-                SelectFilter::make('status_id')
+                \Filament\Tables\Filters\SelectFilter::make('status_id')
                     ->label('Status')
                     ->relationship('status', 'name'),
 
-                // виводить всіх користувачів, а не тільки PM-ів
-                // SelectFilter::make('pm_id')
-                //     ->label('Project manager')
-                //     ->relationship('pm', 'full_name'),
+                \Filament\Tables\Filters\SelectFilter::make('pm_id')
+                    ->label('Project manager')
+                    ->options(function () {
+                        // Отримайте тільки користувачів, які є Project Manager
+                        return \App\Models\User::whereHas('position', function ($query) {
+                            $query->where('name', \App\Models\Position::PROJECT_MANAGER);
+                        })->pluck('full_name', 'id');
+                    }),
 
-
-                SelectFilter::make('teams')
+                \Filament\Tables\Filters\SelectFilter::make('teams')
                     ->label('Teams')
                     ->relationship('teams', 'name')
-                    ->multiple(),
+                    ->multiple()
+                    ->preload(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
