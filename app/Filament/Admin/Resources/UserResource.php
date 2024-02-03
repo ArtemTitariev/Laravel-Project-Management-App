@@ -51,9 +51,10 @@ class UserResource extends Resource
                             ->required(),
 
                         TextInput::make('email')
-                            ->unique()
                             ->email()
-                            ->required(),
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create')
+                            ->unique(ignoreRecord: true),
 
                         TextInput::make('password')
                             ->password()
