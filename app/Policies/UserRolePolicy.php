@@ -31,7 +31,8 @@ class UserRolePolicy
      */
     public function create(User $user): bool
     {
-        return $user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
     }
 
     /**

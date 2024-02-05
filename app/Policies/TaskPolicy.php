@@ -16,10 +16,7 @@ class TaskPolicy
         return
             $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            $user->tasks->isNotEmpty()
-
-            // показати тільки ті задачі, які відносяться до користувача
-        ;
+            ($user->userRole->isWorker() && $user->tasks->isNotEmpty());
     }
 
     /**
@@ -37,7 +34,8 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return true; //$user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->userRole->isWorker();
     }
 
     /**
@@ -56,7 +54,8 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
     }
 
     /**
@@ -64,7 +63,8 @@ class TaskPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
     }
 
     /**

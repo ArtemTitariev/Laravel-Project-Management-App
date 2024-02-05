@@ -15,11 +15,7 @@ class ProjectPolicy
     {
         return $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            $user->projects->isNotEmpty()
-
-
-            // показати тільки ті проєкти, які відносяться до користувача
-        ;
+            ($user->userRole->isWorker() && $user->projects->isNotEmpty());
     }
 
     /**
@@ -29,7 +25,7 @@ class ProjectPolicy
     {
         return $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            $user->projects->contains($project->id);
+            ($user->userRole->isWorker() && $user->projects->contains($project->id));
     }
 
     /**

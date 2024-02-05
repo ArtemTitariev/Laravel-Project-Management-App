@@ -16,11 +16,7 @@ class TeamPolicy
 
         return $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            $user->teams->isNotEmpty()
-
-
-            // показати тільки команди, де є користувач
-        ;
+            ($user->userRole->isWorker() && $user->teams->isNotEmpty());
     }
 
     /**
@@ -30,7 +26,7 @@ class TeamPolicy
     {
         return $user->userRole->isAdmin() ||
             $user->position->isProjectManager() ||
-            ($user->teams->contains($team->id));
+            ($user->userRole->isWorker() && $user->teams->contains($team->id));
     }
 
     /**
@@ -56,7 +52,8 @@ class TeamPolicy
      */
     public function delete(User $user, Team $team): bool
     {
-        return $user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
     }
 
     /**
@@ -64,7 +61,8 @@ class TeamPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->userRole->isAdmin();
+        return $user->userRole->isAdmin() ||
+            $user->position->isProjectManager();
     }
 
     /**

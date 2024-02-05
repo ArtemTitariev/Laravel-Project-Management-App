@@ -25,7 +25,8 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->userRole->isAdmin() ||
+            $user->userRole->isWorker();
     }
 
     /**
@@ -33,7 +34,8 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return true;
+        return $user->userRole->isAdmin() ||
+            $user->userRole->isWorker();
     }
 
     /**
