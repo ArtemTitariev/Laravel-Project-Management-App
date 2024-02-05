@@ -46,9 +46,26 @@ class TaskResource extends Resource
                             ->searchable()
                             ->required(),
 
+                        // only workers and not project managers
                         \Filament\Forms\Components\Select::make('employee_id')
                             ->label('Employee')
-                            ->options(\App\Models\User::all()->mapWithKeys(function ($user) {
+                            ->options(\App\Models\User::whereHas(
+                                'userRole',
+                                function ($query) {
+                                    $query->where(
+                                        'name',
+                                        \App\Models\UserRole::WORKER
+                                    );
+                                }
+                            )->whereHas(
+                                'position',
+                                function ($query) {
+                                    $query->whereNot(
+                                        'name',
+                                        \App\Models\Position::PROJECT_MANAGER
+                                    );
+                                }
+                            )->get()->mapWithKeys(function ($user) {
                                 return [$user->id => $user->name . ' ' . $user->second_name];
                             }))
                             ->searchable()
@@ -72,13 +89,28 @@ class TaskResource extends Resource
                         \Filament\Forms\Components\DatePicker::make('start_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('start date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                },
+                            ])
                             ->required(),
 
                         \Filament\Forms\Components\DatePicker::make('finish_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('finish date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                },
+                            ])
                             ->afterOrEqual('start_date')
-                            ->requiredIf('status_id', '1'),
+                            ->required()
+                            ->validationMessages([
+                                'required_if' => 'The :attribute field is required when task status is Finished.',
+                            ]),
                     ]),
             ]);
     }
@@ -151,6 +183,7 @@ class TaskResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

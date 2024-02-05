@@ -66,18 +66,32 @@ class ProjectResource extends Resource
                         \Filament\Forms\Components\DatePicker::make('start_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('start date', $value, 'project status', $fail, $get, \App\Models\ProjectStatus::class);
+                                },
+                            ])
                             ->required(),
 
                         \Filament\Forms\Components\DatePicker::make('finish_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('finish date', $value, 'project status', $fail, $get, \App\Models\ProjectStatus::class);
+                                },
+                            ])
                             ->afterOrEqual('start_date')
+                            ->required()
                             // ->requiredIf('status_id', function ($record) {
                             //     return $record->status_id ===
-                            //         \App\Models\ProjectStatus::where('name', 'Finished')
-                            //         ->first()->id;
+                            //         \App\Models\ProjectStatus::where(
+                            //             'name',
+                            //             \App\Models\ProjectStatus::FINISHED
+                            //         )->first()->id;
                             // })
-                            ->required()
                             ->validationMessages([
                                 'required_if' => 'The :attribute field is required when project status is Finished.',
                             ]),
@@ -142,7 +156,6 @@ class ProjectResource extends Resource
                 \Filament\Tables\Filters\SelectFilter::make('pm_id')
                     ->label('Project manager')
                     ->options(function () {
-                        // Отримайте тільки користувачів, які є Project Manager
                         return \App\Models\User::whereHas('position', function ($query) {
                             $query->where('name', \App\Models\Position::PROJECT_MANAGER);
                         })->pluck('full_name', 'id');

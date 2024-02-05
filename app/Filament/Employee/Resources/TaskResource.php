@@ -68,18 +68,33 @@ class TaskResource extends Resource
                             ->required(),
                     ]),
 
-                Forms\Components\Fieldset::make('Dates')
+                \Filament\Forms\Components\Fieldset::make('Dates')
                     ->schema([
-                        Forms\Components\DatePicker::make('start_date')
+                        \Filament\Forms\Components\DatePicker::make('start_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('start date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                },
+                            ])
                             ->required(),
 
-                        Forms\Components\DatePicker::make('finish_date')
+                        \Filament\Forms\Components\DatePicker::make('finish_date')
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
+                            ->rules([
+                                fn (\Filament\Forms\Get $get): \Closure =>
+                                function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    checkDateFieldWhenFinished('finish date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                },
+                            ])
                             ->afterOrEqual('start_date')
-                            ->required(),
+                            ->required()
+                            ->validationMessages([
+                                'required_if' => 'The :attribute field is required when task status is Finished.',
+                            ]),
                     ]),
             ]);
     }
