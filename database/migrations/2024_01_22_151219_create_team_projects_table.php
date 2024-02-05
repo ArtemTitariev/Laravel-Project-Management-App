@@ -21,7 +21,7 @@ return new class extends Migration
                 ->onUpdate('cascade')->onDelete('restrict');
             $table->foreign('project_id')
                 ->references('id')->on('projects')
-                ->onUpdate('cascade')->onDelete('restrict');
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

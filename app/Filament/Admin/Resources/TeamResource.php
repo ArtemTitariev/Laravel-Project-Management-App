@@ -75,7 +75,12 @@ class TeamResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($data, $record) {
+                        if ($record->projects->isNotEmpty()) {
+                            sendErrorNotification('Team', 'Projects', $record->name);
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Admin\Resources\ProjectCategoryResource\Pages;
+use Filament\Notifications\Notification;
 
 class ProjectCategoryResource extends Resource
 {
@@ -44,11 +45,23 @@ class ProjectCategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($data, $record) {
+                        if ($record->projects->isNotEmpty()) {
+                            sendErrorNotification('Project Category', 'Projects', $record->name);
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function ($data, $records) {
+                            foreach ($records as $record) {
+                                if ($record->projects->isNotEmpty()) {
+                                    sendErrorNotification('Project Category', 'Projects', $record->name);
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

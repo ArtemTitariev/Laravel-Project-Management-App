@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->foreign('team_id')
                 ->references('id')->on('teams')
-                ->onUpdate('cascade')->onDelete('restrict');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('restrict');

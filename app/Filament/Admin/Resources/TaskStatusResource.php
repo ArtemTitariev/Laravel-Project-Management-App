@@ -33,7 +33,7 @@ class TaskStatusResource extends Resource
     {
         return $table
             ->columns([
-               \Filament\Tables\Columns\TextColumn::make('name')
+                \Filament\Tables\Columns\TextColumn::make('name')
                     ->sortable()->searchable()
                     ->wrap(),
                 \Filament\Tables\Columns\TextColumn::make('created_at')
@@ -44,11 +44,23 @@ class TaskStatusResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($data, $record) {
+                        if ($record->tasks->isNotEmpty()) {
+                            sendErrorNotification('Task Status', 'Tasks', $record->name);
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function ($data, $records) {
+                            foreach ($records as $record) {
+                                if ($record->tasks->isNotEmpty()) {
+                                    sendErrorNotification('Task Status', 'Tasks', $record->name);
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

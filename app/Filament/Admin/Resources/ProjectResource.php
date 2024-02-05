@@ -32,11 +32,19 @@ class ProjectResource extends Resource
 
                         \Filament\Forms\Components\Select::make('pm_id')
                             ->label('Project manager')
-                            ->options(\App\Models\User::whereHas('userRole', function ($query) {
-                                $query->where('name', \App\Models\Position::PROJECT_MANAGER);
-                            })->get()->mapWithKeys(function ($user) {
-                                return [$user->id => $user->full_name];
-                            }))
+                            ->options(
+                                \App\Models\User::whereHas(
+                                    'position',
+                                    function ($query) {
+                                        $query->where(
+                                            'name',
+                                            \App\Models\Position::PROJECT_MANAGER
+                                        );
+                                    }
+                                )->get()->mapWithKeys(function ($user) {
+                                    return [$user->id => $user->full_name];
+                                })
+                            )
                             ->searchable()
                             ->required(),
 
@@ -64,11 +72,12 @@ class ProjectResource extends Resource
                             ->format('d.m.Y')
                             ->closeOnDateSelection()
                             ->afterOrEqual('start_date')
-                            ->requiredIf('status_id', function ($record) {
-                                return $record->status_id ===
-                                    \App\Models\ProjectStatus::where('name', 'Finished')
-                                    ->first()->id;
-                            })
+                            // ->requiredIf('status_id', function ($record) {
+                            //     return $record->status_id ===
+                            //         \App\Models\ProjectStatus::where('name', 'Finished')
+                            //         ->first()->id;
+                            // })
+                            ->required()
                             ->validationMessages([
                                 'required_if' => 'The :attribute field is required when project status is Finished.',
                             ]),

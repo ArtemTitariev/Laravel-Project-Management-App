@@ -44,11 +44,23 @@ class ProjectStatusResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($data, $record) {
+                        if ($record->projects->isNotEmpty()) {
+                            sendErrorNotification('Project Status', 'Projects', $record->name);
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function ($data, $records) {
+                            foreach ($records as $record) {
+                                if ($record->projects->isNotEmpty()) {
+                                    sendErrorNotification('Project Status', 'Projects', $record->name);
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

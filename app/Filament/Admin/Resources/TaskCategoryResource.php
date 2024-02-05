@@ -44,11 +44,23 @@ class TaskCategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(function ($data, $record) {
+                        if ($record->tasks->isNotEmpty()) {
+                            sendErrorNotification('Task Category', 'Tasks', $record->name);
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function ($data, $records) {
+                            foreach ($records as $record) {
+                                if ($record->tasks->isNotEmpty()) {
+                                    sendErrorNotification('Task Category', 'Tasks', $record->name);
+                                }
+                            }
+                        }),
                 ]),
             ]);
     }

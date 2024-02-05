@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->foreign('project_id')
                 ->references('id')->on('projects')
-                ->onUpdate('cascade')->onDelete('restrict');
+                ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('category_id')
                 ->references('id')->on('task_categories')
                 ->onUpdate('cascade')->onDelete('restrict');
