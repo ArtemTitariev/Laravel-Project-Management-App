@@ -29,6 +29,9 @@ class EmployeePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
             ])
+            ->brandLogo(fn () => view('components.application-logo'))
+            ->viteTheme('resources/css/filament/theme.css')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Light)
             ->discoverResources(in: app_path('Filament/Employee/Resources'), for: 'App\\Filament\\Employee\\Resources')
             ->discoverPages(in: app_path('Filament/Employee/Pages'), for: 'App\\Filament\\Employee\\Pages')
             ->pages([

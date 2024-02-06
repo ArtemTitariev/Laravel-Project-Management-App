@@ -76,12 +76,7 @@ return [
     'widgets' => [
         'namespace' => 'App\\Filament\\Widgets',
         'path' => app_path('Filament/Widgets'),
-        // 'default' => [
-        //     'account' => false, // Disables the account widget.
-        //     'info' => false, // Disables the info widget.
-        // ],
         'register' => [
-           //ProjectStatsOverview::class,
         ]
     ],
 

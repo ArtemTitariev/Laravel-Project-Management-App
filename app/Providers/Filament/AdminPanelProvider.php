@@ -26,7 +26,6 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            // ->path('app')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
@@ -37,6 +36,9 @@ class AdminPanelProvider extends PanelProvider
                 'Team Management',
                 'User Management',
             ])
+            ->brandLogo(fn () => view('components.application-logo'))
+            ->viteTheme('resources/css/filament/theme.css')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Light)
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([

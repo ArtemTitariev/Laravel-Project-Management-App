@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
     {{-- <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"> --}}
 
-    {{-- <link href="https://cdn.tailwindcss.com" rel="stylesheet"> --}}
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
