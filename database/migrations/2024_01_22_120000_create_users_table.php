@@ -17,13 +17,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('second_name');
             $table->string('email')->unique();
-            //$table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
             $table->unsignedBigInteger('position_id');
             $table->string('avatar')->nullable();
-            $table->timestamp('last_login_at')->nullable();
-            //$table->date('register_at'); //created_at instead
 
             $table->unsignedBigInteger('user_role_id');
 

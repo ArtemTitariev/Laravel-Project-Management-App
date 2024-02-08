@@ -47,7 +47,11 @@ class TaskStatusResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->action(function ($data, $record) {
                         if ($record->tasks->isNotEmpty()) {
-                            sendErrorNotification('Task Status', 'Tasks', $record->name);
+                            sendErrorNotification(
+                                'Task Status',
+                                'Tasks',
+                                $record->name
+                            );
                         }
                     }),
             ])
@@ -57,7 +61,11 @@ class TaskStatusResource extends Resource
                         ->action(function ($data, $records) {
                             foreach ($records as $record) {
                                 if ($record->tasks->isNotEmpty()) {
-                                    sendErrorNotification('Task Status', 'Tasks', $record->name);
+                                    sendErrorNotification(
+                                        'Task Status',
+                                        'Tasks',
+                                        $record->name
+                                    );
                                 }
                             }
                         }),

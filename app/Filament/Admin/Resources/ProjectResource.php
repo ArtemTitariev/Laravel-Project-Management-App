@@ -50,13 +50,15 @@ class ProjectResource extends Resource
 
                         \Filament\Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(\App\Models\ProjectCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectCategory::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
                         \Filament\Forms\Components\Select::make('status_id')
                             ->label('Status')
-                            ->options(\App\Models\ProjectStatus::all()->pluck('name', 'id'))
+                            ->options(\App\Models\ProjectStatus::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),
@@ -69,7 +71,14 @@ class ProjectResource extends Resource
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
                                 function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('start date', $value, 'project status', $fail, $get, \App\Models\ProjectStatus::class);
+                                    checkDateFieldWhenFinished(
+                                        'start date',
+                                        $value,
+                                        'project status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\ProjectStatus::class
+                                    );
                                 },
                             ])
                             ->required(),
@@ -79,19 +88,23 @@ class ProjectResource extends Resource
                             ->closeOnDateSelection()
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
-                                function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('finish date', $value, 'project status', $fail, $get, \App\Models\ProjectStatus::class);
+                                function (
+                                    string $attribute,
+                                    $value,
+                                    \Closure $fail
+                                ) use ($get) {
+                                    checkDateFieldWhenFinished(
+                                        'finish date',
+                                        $value,
+                                        'project status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\ProjectStatus::class
+                                    );
                                 },
                             ])
                             ->afterOrEqual('start_date')
                             ->required()
-                            // ->requiredIf('status_id', function ($record) {
-                            //     return $record->status_id ===
-                            //         \App\Models\ProjectStatus::where(
-                            //             'name',
-                            //             \App\Models\ProjectStatus::FINISHED
-                            //         )->first()->id;
-                            // })
                             ->validationMessages([
                                 'required_if' => 'The :attribute field is required when project status is Finished.',
                             ]),
@@ -156,9 +169,15 @@ class ProjectResource extends Resource
                 \Filament\Tables\Filters\SelectFilter::make('pm_id')
                     ->label('Project manager')
                     ->options(function () {
-                        return \App\Models\User::whereHas('position', function ($query) {
-                            $query->where('name', \App\Models\Position::PROJECT_MANAGER);
-                        })->pluck('full_name', 'id');
+                        return \App\Models\User::whereHas(
+                            'position',
+                            function ($query) {
+                                $query->where(
+                                    'name',
+                                    \App\Models\Position::PROJECT_MANAGER
+                                );
+                            }
+                        )->pluck('full_name', 'id');
                     }),
 
                 \Filament\Tables\Filters\SelectFilter::make('teams')

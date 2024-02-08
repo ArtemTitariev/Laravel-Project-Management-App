@@ -47,7 +47,11 @@ class ProjectStatusResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->action(function ($data, $record) {
                         if ($record->projects->isNotEmpty()) {
-                            sendErrorNotification('Project Status', 'Projects', $record->name);
+                            sendErrorNotification(
+                                'Project Status',
+                                'Projects',
+                                $record->name
+                            );
                         }
                     }),
             ])
@@ -57,7 +61,11 @@ class ProjectStatusResource extends Resource
                         ->action(function ($data, $records) {
                             foreach ($records as $record) {
                                 if ($record->projects->isNotEmpty()) {
-                                    sendErrorNotification('Project Status', 'Projects', $record->name);
+                                    sendErrorNotification(
+                                        'Project Status',
+                                        'Projects',
+                                        $record->name
+                                    );
                                 }
                             }
                         }),

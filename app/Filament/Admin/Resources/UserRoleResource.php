@@ -46,7 +46,11 @@ class UserRoleResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->action(function ($data, $record) {
                         if ($record->users->isNotEmpty()) {
-                            sendErrorNotification('User Role', 'Users', $record->name);
+                            sendErrorNotification(
+                                'User Role',
+                                'Users',
+                                $record->name
+                            );
                         }
                     }),
             ])
@@ -56,7 +60,11 @@ class UserRoleResource extends Resource
                         ->action(function ($data, $records) {
                             foreach ($records as $record) {
                                 if ($record->users->isNotEmpty()) {
-                                    sendErrorNotification('User Role', 'Users', $record->name);
+                                    sendErrorNotification(
+                                        'User Role',
+                                        'Users',
+                                        $record->name
+                                    );
                                 }
                             }
                         }),

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,8 +41,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         'name', 'second_name', 'full_name',
         'email', 'password',
         'avatar',
-        //'is_active',
-        'last_login_at', //'register_at', 
+        'last_login_at',
         'position_id', 'user_role_id',
     ];
 
@@ -65,7 +62,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
      */
     protected $casts = [
         'password' => 'hashed',
-        //'register_at' => 'date',
         'last_login_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

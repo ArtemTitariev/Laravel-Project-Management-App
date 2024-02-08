@@ -42,11 +42,12 @@ class TaskResource extends Resource
                     ->schema([
                         \Filament\Forms\Components\Select::make('project_id')
                             ->label('Project')
-                            ->options(\App\Models\Project::all()->pluck('name', 'id'))
+                            ->options(\App\Models\Project::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
-                        // only workers and not project managers
+                        // Only workers and not project managers
                         \Filament\Forms\Components\Select::make('employee_id')
                             ->label('Employee')
                             ->options(\App\Models\User::whereHas(
@@ -66,14 +67,16 @@ class TaskResource extends Resource
                                     );
                                 }
                             )->get()->mapWithKeys(function ($user) {
-                                return [$user->id => $user->name . ' ' . $user->second_name];
+                                return [$user->id => $user->name . ' ' .
+                                    $user->second_name];
                             }))
                             ->searchable()
                             ->required(),
 
                         \Filament\Forms\Components\Select::make('category_id')
                             ->label('Category')
-                            ->options(\App\Models\TaskCategory::all()->pluck('name', 'id'))
+                            ->options(\App\Models\TaskCategory::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
 
@@ -91,8 +94,19 @@ class TaskResource extends Resource
                             ->closeOnDateSelection()
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
-                                function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('start date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                function (
+                                    string $attribute,
+                                    $value,
+                                    \Closure $fail
+                                ) use ($get) {
+                                    checkDateFieldWhenFinished(
+                                        'start date',
+                                        $value,
+                                        'task status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\TaskStatus::class
+                                    );
                                 },
                             ])
                             ->required(),
@@ -102,8 +116,19 @@ class TaskResource extends Resource
                             ->closeOnDateSelection()
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
-                                function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('finish date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                function (
+                                    string $attribute,
+                                    $value,
+                                    \Closure $fail
+                                ) use ($get) {
+                                    checkDateFieldWhenFinished(
+                                        'finish date',
+                                        $value,
+                                        'task status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\TaskStatus::class
+                                    );
                                 },
                             ])
                             ->afterOrEqual('start_date')

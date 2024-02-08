@@ -67,10 +67,7 @@ class TeamResource extends Resource
 
             ])
             ->filters([
-                // SelectFilter::make('members')
-                //     ->label('Members')
-                //     ->relationship('members', 'full_name')
-                //     ->multiple(),
+                //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

@@ -75,8 +75,19 @@ class TaskResource extends Resource
                             ->closeOnDateSelection()
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
-                                function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('start date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                function (
+                                    string $attribute,
+                                    $value,
+                                    \Closure $fail
+                                ) use ($get) {
+                                    checkDateFieldWhenFinished(
+                                        'start date',
+                                        $value,
+                                        'task status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\TaskStatus::class
+                                    );
                                 },
                             ])
                             ->required(),
@@ -86,14 +97,26 @@ class TaskResource extends Resource
                             ->closeOnDateSelection()
                             ->rules([
                                 fn (\Filament\Forms\Get $get): \Closure =>
-                                function (string $attribute, $value, \Closure $fail) use ($get) {
-                                    checkDateFieldWhenFinished('finish date', $value, 'task status', $fail, $get, \App\Models\TaskStatus::class);
+                                function (
+                                    string $attribute,
+                                    $value,
+                                    \Closure $fail
+                                ) use ($get) {
+                                    checkDateFieldWhenFinished(
+                                        'finish date',
+                                        $value,
+                                        'task status',
+                                        $fail,
+                                        $get,
+                                        \App\Models\TaskStatus::class
+                                    );
                                 },
                             ])
                             ->afterOrEqual('start_date')
                             ->required()
                             ->validationMessages([
-                                'required_if' => 'The :attribute field is required when task status is Finished.',
+                                'required_if' => 'The :attribute field is required when task status is ' .
+                                    \App\Models\TaskStatus::FINISHED . '.',
                             ]),
                     ]),
             ]);
@@ -107,7 +130,7 @@ class TaskResource extends Resource
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Name and description')
+                    ->label('Name and Description')
                     ->description(
                         fn (\App\Models\Task $record): string =>
                         $record->description

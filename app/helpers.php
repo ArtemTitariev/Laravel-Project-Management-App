@@ -29,7 +29,7 @@ if (!function_exists('checkDateFieldWhenFinished')) {
             )->first()->id
             &&  $value > now()
         ) {
-            $fail("The $attribute field must be a date before or equal to today when $checkedAttribute is Finished.");
+            $fail("The $attribute field must be a date before or equal to today when $checkedAttribute is " . $model::FINISHED . ".");
         }
     }
 }

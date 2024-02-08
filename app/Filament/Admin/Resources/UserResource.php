@@ -52,12 +52,14 @@ class UserResource extends Resource
                     ->schema([
                         \Filament\Forms\Components\Select::make('position_id')
                             ->label('Position')
-                            ->options(\App\Models\Position::all()->pluck('name', 'id'))
+                            ->options(\App\Models\Position::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                         \Filament\Forms\Components\Select::make('user_role_id')
                             ->label('Role')
-                            ->options(\App\Models\UserRole::all()->pluck('name', 'id'))
+                            ->options(\App\Models\UserRole::all()
+                                ->pluck('name', 'id'))
                             ->searchable()
                             ->required(),
                     ]),

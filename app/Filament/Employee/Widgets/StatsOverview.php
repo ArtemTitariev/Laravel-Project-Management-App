@@ -19,13 +19,15 @@ class StatsOverview extends BaseWidget
                 'Finished Projects',
 
                 $projects->filter(function ($project) {
-                    return $project->status->name == \App\Models\ProjectStatus::FINISHED;
+                    return $project->status->name ==
+                        \App\Models\ProjectStatus::FINISHED;
                 })->count()
             ),
             Stat::make(
                 'Projects In-Progress',
                 $projects->filter(function ($project) {
-                    return $project->status->name == \App\Models\ProjectStatus::IN_PROGRESS;
+                    return $project->status->name ==
+                        \App\Models\ProjectStatus::IN_PROGRESS;
                 })->count()
             ),
 
@@ -35,13 +37,15 @@ class StatsOverview extends BaseWidget
                 'Finished Tasks',
 
                 $tasks->filter(function ($task) {
-                    return $task->status->name == \App\Models\TaskStatus::FINISHED;
+                    return $task->status->name ==
+                        \App\Models\TaskStatus::FINISHED;
                 })->count()
             ),
             Stat::make(
                 'Tasks In-Progress',
                 $tasks->filter(function ($task) {
-                    return $task->status->name == \App\Models\TaskStatus::IN_PROGRESS;
+                    return $task->status->name ==
+                        \App\Models\TaskStatus::IN_PROGRESS;
                 })->count()
             ),
         ];

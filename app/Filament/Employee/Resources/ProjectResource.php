@@ -72,11 +72,15 @@ class ProjectResource extends Resource
                             ->afterOrEqual('start_date')
                             ->requiredIf('status_id', function ($record) {
                                 return $record->status_id ===
-                                    \App\Models\ProjectStatus::where('name', 'Finished')
+                                    \App\Models\ProjectStatus::where(
+                                        'name',
+                                        \App\Models\ProjectStatus::FINISHED
+                                    )
                                     ->first()->id;
                             })
                             ->validationMessages([
-                                'required_if' => 'The :attribute field is required when project status is Finished.',
+                                'required_if' => 'The :attribute field is required when project status is ' .
+                                    \App\Models\ProjectStatus::FINISHED . '.',
                             ]),
                     ]),
             ]);
