@@ -39,11 +39,7 @@ class MembersRelationManager extends RelationManager
                             ->required(fn (string $context): bool => $context === 'create')
                             ->unique(ignoreRecord: true),
 
-                        Forms\Components\TextInput::make('password')
-                            ->password()
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create')
+                        myPasswordField(), // helper
                     ]),
                 Forms\Components\Fieldset::make('Position and role')
                     ->schema([

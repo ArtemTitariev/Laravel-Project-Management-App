@@ -33,3 +33,24 @@ if (!function_exists('checkDateFieldWhenFinished')) {
         }
     }
 }
+
+if (!function_exists('myPasswordFiled')) {
+    function myPasswordField()
+    {
+        return
+            \Filament\Forms\Components\TextInput::make('password')
+            ->password()
+            ->minLength(8)
+            ->regex('/[a-z]/') // must contain at least one lowercase letter
+            ->regex('/[A-Z]/') // must contain at least one uppercase letter
+            ->regex('/[0-9]/') // must contain at least one digit
+            ->regex('/[0-9]/') // must contain a special character
+            ->regex('/[@$!%*#?&]/')
+            ->validationMessages([
+                'regex' => 'The :attribute must contain at least one lowercase letter, one uppercase letter, one digit and one character.',
+            ])
+            ->dehydrateStateUsing(fn ($state) => \Illuminate\Support\Facades\Hash::make($state))
+            ->dehydrated(fn ($state) => filled($state))
+            ->required(fn (string $context): bool => $context === 'create');
+    }
+}

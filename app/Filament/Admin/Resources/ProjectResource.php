@@ -106,7 +106,8 @@ class ProjectResource extends Resource
                             ->afterOrEqual('start_date')
                             ->required()
                             ->validationMessages([
-                                'required_if' => 'The :attribute field is required when project status is Finished.',
+                                'required_if' => 'The :attribute field is required when project status is ' .
+                                    \App\Models\ProjectStatus::FINISHED . '.',
                             ]),
                     ]),
             ]);

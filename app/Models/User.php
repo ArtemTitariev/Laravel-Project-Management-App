@@ -41,7 +41,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
         'name', 'second_name', 'full_name',
         'email', 'password',
         'avatar',
-        'last_login_at',
         'position_id', 'user_role_id',
     ];
 
@@ -62,7 +61,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia
      */
     protected $casts = [
         'password' => 'hashed',
-        'last_login_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'position_id' => 'integer',

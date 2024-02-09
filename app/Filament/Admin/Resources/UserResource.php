@@ -6,7 +6,6 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Hash;
 use App\Filament\Admin\Resources\UserResource\Pages;
 use App\Filament\Admin\Resources\UserResource\RelationManagers\PositionRelationManager;
 use App\Filament\Admin\Resources\UserResource\RelationManagers\UserRoleRelationManager;
@@ -42,11 +41,7 @@ class UserResource extends Resource
                             ->required(fn (string $context): bool => $context === 'create')
                             ->unique(ignoreRecord: true),
 
-                        \Filament\Forms\Components\TextInput::make('password')
-                            ->password()
-                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $context): bool => $context === 'create')
+                        myPasswordField(), // helper
                     ]),
                 \Filament\Forms\Components\Fieldset::make('Position and role')
                     ->schema([

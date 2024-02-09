@@ -134,7 +134,8 @@ class TaskResource extends Resource
                             ->afterOrEqual('start_date')
                             ->required()
                             ->validationMessages([
-                                'required_if' => 'The :attribute field is required when task status is Finished.',
+                                'required_if' => 'The :attribute field is required when task status is ' .
+                                    \App\Models\TaskStatus::FINISHED . '.',
                             ]),
                     ]),
             ]);
